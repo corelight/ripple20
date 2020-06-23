@@ -1,2 +1,2 @@
-@load ./config
-@load ./ripple20_all_checks
+@load ./config.zeek
+@load ./ripple20_all_checks.zeek
