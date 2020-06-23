@@ -1,0 +1,5 @@
+[package]
+description = (Treck IOT Ripple20 exploit detection)
+tags = IOT, ICS, exploit, Ripple20, Treck
+version = 0.1
+script_dir = scripts
