@@ -1,5 +1,8 @@
 # "Ripple20" Treck IOT/ICS device discovery and exploit detection
-
+<p align="center">
+  <img width="230" height="150" src="r20_logo.png">
+</p>
+  
 ## Summary:  
 A Zeek package for the passive detection of Treck devices, discovery/scanning attempts and exploitation of the "Ripple20" set of vulnerabilities in the Treck TCP/IP stack. 
 
