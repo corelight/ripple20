@@ -14,18 +14,17 @@ A Zeek package for the passive detection of Treck devices, discovery/scanning at
 The following table describes each notice produced and it's dependancy of a function introduced in zeek v3.2.0.  
 The package can still be installed and will produce notices for older versions, as shown in this table.  
 
-| Notice | works with zeek version < 3.2.0 | works with zeek version >= 3.2.0| Fidelity class |
+| Notice | works with zeek version < 3.2.0 | works with zeek version >= 3.2.0| Fidelity  |
 | -------- | ---------------------- | ---------------------- | ---------------------- |
-|Treck device has been observed based on unique IP/TTL artefacts method 1|needs 3.2.0|yes| 10 | 
-|Treck device has been observed based on unique IP/TTL artefacts method 2|needs 3.2.0|yes| 10 |
-|Treck device has been observed based on unique TCP artefacts|yes|yes| 5 |
-|Treck device has been observed based on unique ICMP artefacts|yes|yes| 10 |
-|The JSOF scanning tool has been observed method 1|yes|yes| 10 |
-|The JSOF scanning tool has been observed method 2|yes|yes| 10 |
+|Treck device has been observed based on IP/TTL artefacts method 1|needs 3.2.0|yes| high | 
+|Treck device has been observed based on IP/TTL artefacts method 2|needs 3.2.0|yes| high |
+|Treck device has been observed based on TCP artefacts|yes|yes| medium |
+|Treck device has been observed based on ICMP artefacts|yes|yes| high |
+|The JSOF scanning tool has been observed method 1|yes|yes| high |
+|The JSOF scanning tool has been observed method 2|yes|yes| high |
   
-Fidelity class of 10 means that this is a high fidelity indicator, giving high confidence of a True Positive.
-
-Fidelity class of 5 means medium reliability by itself (there may be False Positives), however if this occurs in conjunction with any of the other alerts this raises the fidelity of the combined finding. To be cautious, by default a notice is raised for the lower fidelity alert, however if you like you can turn this notice off with `enable_fidelity5_notices = F` in the `scripts/config.zeek`
+High Fidelity means high confidence of a True Positive.
+By default all high and medium notices are raised, however if you like you can turn the medium notice off with `enable_medium_fidelity_notices = F` in `scripts/config.zeek`
 
 Each notice includes a small amount of packet metadata which is useful for triage and refinement. 
 
@@ -39,4 +38,7 @@ Treck device TCP artefacts have been observed. If unpatched, the device at 10.1.
 |JSOF Ripple20 scanner has been observed coming from 10.1.133.37 (RST from responder on ports 40509->40508) . https://www.jsof-tech.com/ripple20/||
 |Treck device TTL artefacts have been observed (method2). If 10.1.2.4 is an unpatched Treck device, it could be impacted by the 'Ripple20' vulnerabilities involving the Treck TCP/IP stack https://www.jsof-tech.com/ripple20/ |<debug info: get_current_packet_header() = [l2=[encap=LINK_ETHERNET, len=54, cap_len=54, src=_mac redacted_, dst=_mac redacted_, vlan=<uninitialized>, inner_vlan=<uninitialized>, eth_type=2048, proto=L3_IPV4], ip=[hl=20, tos=16, len=40, id=33734, ttl=64, p=6, src=10.1.2.4, dst=10.1.133.37], ip6=<uninitialized>, tcp=[sport=40508/tcp, dport=40509/tcp, seq=0, ack=1, hl=20, dl=0, reserved=0, flags=20, win=0], udp=<uninitialized>, icmp=<uninitialized>]>|
 |JSOF Ripple20 scanner has been observed coming from 10.1.133.37 (window scale=123). https://www.jsof-tech.com/ripple20/ |<debug info: pkt=[is_orig=T, DF=F, ttl=64, size=44, win_size=8192, win_scale=123, MSS=0, SACK_OK=F]>|
-  
+
+
+## Architecture:
+The script ```ripple20_nonclusterized.zeek``` in this repository is written for a non clustered Zeek environment. This script can be loaded and will work as intended for some of the notices in a clustered environment, however to be efficient and fully effective a different version of this script is required which supports Zeek clusters. 
