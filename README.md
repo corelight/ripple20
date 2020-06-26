@@ -3,7 +3,8 @@
 ## Summary:  
 A Zeek package for the passive detection of Treck devices, discovery/scanning attempts and exploitation of the "Ripple20" set of vulnerabilities in the Treck TCP/IP stack. 
 
-## References:  
+## References: 
+- https://corelight.blog/
 - https://www.jsof-tech.com/ripple20/    
 - python/scapy scanning package provided by JSOF.  
 - https://treck.com/vulnerability-response-information/
@@ -41,4 +42,4 @@ Treck device TCP artefacts have been observed. If unpatched, the device at 10.1.
 
 
 ## Architecture:
-The script ```ripple20_nonclusterized.zeek``` in this repository is written for a non clustered Zeek environment. This script can be loaded and will work as intended for some of the notices in a clustered environment, however to be efficient and fully effective a different version of this script is required which supports Zeek clusters. 
+The script ```ripple20_nonclusterized.zeek``` in this repository is written for a non clustered Zeek environment. This script can be loaded and will work as intended for some of the notices in a clustered environment, however to be efficient and fully effective a different version of this script that supports Zeek clusters is required.
