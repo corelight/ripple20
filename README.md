@@ -20,15 +20,16 @@ The package can still be installed and will produce notices for older versions, 
 
 | Notice | works with zeek version < 3.2.0 | works with zeek version >= 3.2.0| Fidelity  |
 | -------- | ---------------------- | ---------------------- | ---------------------- |
-|Treck device has been observed based on IP/TTL artefacts method 1|needs 3.2.0|yes| high | 
-|Treck device has been observed based on IP/TTL artefacts method 2|needs 3.2.0|yes| high |
+|Treck device has been observed based on IP/TTL artefacts - method 1|needs 3.2.0|yes| high | 
+|Treck device has been observed based on IP/TTL artefacts - method 2|needs 3.2.0|yes| high |
 |Treck device has been observed based on TCP artefacts|yes|yes| medium |
 |Treck device has been observed based on ICMP artefacts|yes|yes| high |
-|The JSOF scanning tool has been observed method 1|yes|yes| high |
-|The JSOF scanning tool has been observed method 2|yes|yes| high |
+|The JSOF scanning tool (or derivative) has been observed - method 1|yes|yes| high |
+|The JSOF scanning tool (or derivative) has been observed - method 2|yes|yes| high |
   
 High Fidelity means high confidence of a True Positive.
 By default all high and medium notices are raised, however if you like you can turn the medium notice off with `enable_medium_fidelity_notices = F` in `scripts/config.zeek`
+
 
 Each notice includes a small amount of packet metadata which is useful for triage and refinement. 
 
