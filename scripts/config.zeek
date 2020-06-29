@@ -1,5 +1,5 @@
 module Ripple20;
 
 export {
-    option enable_fidelity5_notices: bool = T;
+    option enable_medium_fidelity_notices: bool = T;
 }
