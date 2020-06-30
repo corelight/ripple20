@@ -82,9 +82,6 @@ event connection_SYN_packet(c: connection, pkt: SYN_packet)
             $identifier=cat(c$id$resp_h),
             $msg=fmt("Treck device TCP artefacts have been observed. If %s is an unpatched Treck device, it could be impacted to the 'Ripple20' vulnerabilities involving the Treck TCP/IP stack https://www.jsof-tech.com/ripple20/ and https://treck.com/vulnerability-reply-information/ <debug info: pkt=%s>", c$id$resp_h,pkt)]);
         }
-    # current_packet_header was introduced in 3.2.0, so bail out if < 3.2.0
-    if (Version::info$version_number < 30200)
-        return;
     local current_packet_header:raw_pkt_hdr = get_current_packet_header();
     # Failsafe for runtime
     if (!current_packet_header?$ip)
@@ -132,9 +129,6 @@ event connection_SYN_packet(c: connection, pkt: SYN_packet)
 event icmp_echo_reply(c: connection, icmp: icmp_conn, id: count, seq: count, payload: string)
     {
     # Due to bug in icmp_echo_reply https://github.com/zeek/zeek/issues/1019, am using get_current_packet_header() as workaround
-    # current_packet_header was introduced in 3.2.0, so bail out if < 3.2.0
-    if (Version::info$version_number < 30200)
-        return;
     local current_packet_header:raw_pkt_hdr = get_current_packet_header();
     # Failsafe to prevent runtime error
     if (!current_packet_header?$ip)
@@ -146,9 +140,6 @@ event icmp_echo_reply(c: connection, icmp: icmp_conn, id: count, seq: count, pay
 # Detect native TTL indicator (Part 2a , size 64 but not RST) as in ip_ttl_scan.py
 event connection_established(c: connection)
     {
-    # current_packet_header was introduced in 3.2.0, so bail out if < 3.2.0
-    if (Version::info$version_number < 30200)
-        return;
     local current_packet_header:raw_pkt_hdr = get_current_packet_header();
     # Failsafe to prevent runtime error
     if (!current_packet_header?$ip)
@@ -179,9 +170,6 @@ event connection_rejected(c: connection)
             $msg=fmt("JSOF Ripple20 scanner has been observed coming from %s (RST from responder on ports 40509->40508) . https://www.jsof-tech.com/ripple20/", c$id$orig_h)]);
         }
     # Detect scanner TTL indicator (Part 2b, size 64 RST) as in ip_ttl_scan.py
-    # current_packet_header was introduced in 3.2.0, so bail out if < 3.2.0
-    if (Version::info$version_number < 30200)
-        return;
     local current_packet_header:raw_pkt_hdr = get_current_packet_header();
     # Failsafe to prevent runtime error
     if (!current_packet_header?$ip)
