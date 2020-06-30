@@ -1,3 +1,7 @@
 @load ./config
-@load ./ripple20_nonclusterized
-# @load ./ripple20_CLUSTERIZED # For sensor version
+
+# @if (Cluster::is_enabled())
+	@load ./ripple20_CLUSTERIZED
+# @else
+	# @load ./ripple20_nonclusterized
+# @endif
