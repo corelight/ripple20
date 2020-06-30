@@ -46,4 +46,4 @@ Treck device TCP artefacts have been observed. If unpatched, the device at 10.1.
 
 
 ## Architecture:
-The script ```ripple20_nonclusterized.zeek``` in this repository is written for a non clustered Zeek environment. This script can be loaded and will work as intended for some of the notices in a clustered environment, however to be efficient and fully effective a different version of this script that supports Zeek clusters is required. Contact the author for more detail = Ben Reardon, Research Team @Corelight. ben.reardon@corelight.com, @benreardon.
+The script ```ripple20_nonclusterized.zeek``` in this repository is written for a non clustered Zeek environment. This script can be loaded and will work as intended for some of the notices in a clustered environment, however to be efficient and fully effective a different version of this script that supports Zeek clusters is required. Contact the author for more detail = Ben Reardon, Research Team @Corelight. @benreardon or ben.reardon [at] corelight.com
