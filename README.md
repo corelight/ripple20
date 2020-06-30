@@ -45,5 +45,7 @@ Treck device TCP artefacts have been observed. If unpatched, the device at 10.1.
 |JSOF Ripple20 scanner has been observed coming from 10.1.133.37 (window scale=123). https://www.jsof-tech.com/ripple20/ |<debug info: pkt=[is_orig=T, DF=F, ttl=64, size=44, win_size=8192, win_scale=123, MSS=0, SACK_OK=F]>|
 
 
-## Architecture:
-The script ```ripple20_nonclusterized.zeek``` in this repository is written for a non clustered Zeek environment. This script can be loaded and will work as intended for some of the notices in a clustered environment, however to be efficient and fully effective a different version of this script that supports Zeek clusters is required. Contact the author for more detail = Ben Reardon, Research Team @Corelight. @benreardon or ben.reardon [at] corelight.com
+## Usage:
+- To use against a pcap you already have ```zeek -Cr scripts/__load__.zeek your.pcap```  
+
+- If using in a live environment, the script ```ripple20_nonclusterized.zeek``` is written for a non clustered live Zeek environment. This script can still be loaded and will work as intended for some of the notices in a clustered environment, however to be fully effective a different version of this script that supports Zeek clusters is required. Contact the author for more detail (Ben Reardon, Research Team @Corelight. @benreardon or ben.reardon [at] corelight.com)
