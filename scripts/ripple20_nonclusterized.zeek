@@ -5,7 +5,8 @@ module Ripple20;
 #  3. Treck device has been observed based on unique ICMP artefacts
 #  4. The JSOF scanning tool has been observed
 #  5. An exploit using IP-in-IP encapsulation has been observed
-# Tested on zeek 3.2.0-dev.459 in and developed for an un-clusterized environment. 
+# Tested on zeek 3.2.0-dev.459 in and developed for an un-clusterized environment.
+# Author: Ben Reardon, Research Team @Corelight. ben.reardon@corelight.com, @benreardon
 export {
     redef enum Notice::Type += {
         Treck_ICMP_observed,

@@ -20,8 +20,8 @@ The package can still be installed and will produce notices for older versions, 
 
 | Notice | works with zeek version < 3.2.0 | works with zeek version >= 3.2.0| Fidelity  |
 | -------- | ---------------------- | ---------------------- | ---------------------- |
-|Treck device has been observed based on IP/TTL artefacts - method 1|needs 3.2.0|yes| high | 
-|Treck device has been observed based on IP/TTL artefacts - method 2|needs 3.2.0|yes| high |
+|Treck device has been observed based on IP/TTL artefacts - method 1|needs 3.2.0|yes| medium/high | 
+|Treck device has been observed based on IP/TTL artefacts - method 2|needs 3.2.0|yes| medium/high |
 |Treck device has been observed based on TCP artefacts|yes|yes| medium |
 |Treck device has been observed based on ICMP artefacts|yes|yes| high |
 |The JSOF scanning tool (or derivative) has been observed - method 1|yes|yes| high |
@@ -46,4 +46,4 @@ Treck device TCP artefacts have been observed. If unpatched, the device at 10.1.
 
 
 ## Architecture:
-The script ```ripple20_nonclusterized.zeek``` in this repository is written for a non clustered Zeek environment. This script can be loaded and will work as intended for some of the notices in a clustered environment, however to be efficient and fully effective a different version of this script that supports Zeek clusters is required.
+The script ```ripple20_nonclusterized.zeek``` in this repository is written for a non clustered Zeek environment. This script can be loaded and will work as intended for some of the notices in a clustered environment, however to be efficient and fully effective a different version of this script that supports Zeek clusters is required. Contact the author for more detail = Ben Reardon, Research Team @Corelight. ben.reardon@corelight.com, @benreardon.
