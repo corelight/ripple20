@@ -15,20 +15,20 @@ A Zeek package for the passive detection of Treck devices, discovery/scanning at
 - https://www.kb.cert.org/vuls/id/257161
 
 ## Notices raised:   
-The following table describes each notice produced and it's dependancy of a function introduced in zeek v3.2.0.  
-The package can still be installed and will produce notices for older versions, as shown in this table.  
 
-| Notice | works with zeek version < 3.2.0 | works with zeek version >= 3.2.0| Fidelity  |
-| -------- | ---------------------- | ---------------------- | ---------------------- |
-|Treck device has been observed based on IP/TTL artefacts - method 1|needs 3.2.0|yes| medium/high | 
-|Treck device has been observed based on IP/TTL artefacts - method 2|needs 3.2.0|yes| medium/high |
-|Treck device has been observed based on TCP artefacts|yes|yes| medium |
-|Treck device has been observed based on ICMP artefacts|yes|yes| high |
-|The JSOF scanning tool (or derivative) has been observed - method 1|yes|yes| high |
-|The JSOF scanning tool (or derivative) has been observed - method 2|yes|yes| high |
+| Notice | Fidelity  |
+| -------- | ---------------------- |
+|Treck device has been observed based on IP/TTL artefacts - method 1| medium/high | 
+|Treck device has been observed based on IP/TTL artefacts - method 2| medium/high |
+|Treck device has been observed based on TCP artefacts| medium |
+|Treck device has been observed based on ICMP artefacts|high |
+|The JSOF scanning tool (or derivative) has been observed - method 1| high |
+|The JSOF scanning tool (or derivative) has been observed - method 2| high |
+|Treck IP-in-IP encapsulation exploit outer packet detected| high|
+|Treck IP-in-IP encapsulation exploit inner packet detected| high|
   
 High Fidelity means high confidence of a True Positive.
-By default all high and medium notices are raised, however if you like you can turn the medium notice off with `enable_medium_fidelity_notices = F` in `scripts/config.zeek`
+By default all high and medium notices are raised, however if you like you can turn the medium notice off with `enable_medium_fidelity_notices = F` in `scripts/config.zeek`.
 
 
 Each notice includes a small amount of packet metadata which is useful for triage and refinement. 
