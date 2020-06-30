@@ -7,7 +7,7 @@
 A Zeek package for the passive detection of Treck devices, discovery/scanning attempts and exploitation of the "Ripple20" set of vulnerabilities in the Treck TCP/IP stack. 
 
 ## References: 
-- https://corelight.blog/
+- https://corelight.blog/2020/06/30/ripple20-zeek-package-open-sourced/
 - https://www.jsof-tech.com/ripple20/    
 - python/scapy scanning package provided by JSOF.  
 - https://treck.com/vulnerability-response-information/
