@@ -1,8 +1,8 @@
 module Ripple20;
 # This script raises notices relating to the "Ripple20" vulnerabilities that affect the Treck TCP/IP stack:
-#  1. Treck device has been observed based on unique IP artefacts
-#  2. Treck device has been observed based on unique TCP artefacts (medium fidelity)
-#  3. Treck device has been observed based on unique ICMP artefacts
+#  1. Treck device has been observed based on unique IP artifacts
+#  2. Treck device has been observed based on unique TCP artifacts (medium fidelity)
+#  3. Treck device has been observed based on unique ICMP artifacts
 #  4. The JSOF scanning tool has been observed
 #  5. An exploit using IP-in-IP encapsulation has been observed
 # Tested on zeek 3.2.0-dev.459
@@ -50,7 +50,7 @@ event Ripple20::worker_to_manager(table_to_update: string, key: string, c:connec
         NOTICE([$note=Treck_ICMP_observed,
                 $conn=c,
                 $identifier=key,
-                $msg=fmt("Treck device ICMP artefacts have been observed. If %s is an unpatched Treck device, it could be impacted by the 'Ripple20' vulnerabilities involving the Treck TCP/IP stack https://www.jsof-tech.com/ripple20/ and https://treck.com/vulnerability-reply-information/ <debug info:icmp=>", c$id$orig_h)]);
+                $msg=fmt("Treck device ICMP artifacts have been observed. If %s is an unpatched Treck device, it could be impacted by the 'Ripple20' vulnerabilities involving the Treck TCP/IP stack https://www.jsof-tech.com/ripple20/ and https://treck.com/vulnerability-reply-information/ <debug info:icmp=>", c$id$orig_h)]);
         delete seen_treck_165_ping_from[key];
         delete seen_treck_166_pong_from[key];
         return;
@@ -99,7 +99,7 @@ event Ripple20::worker_to_manager(table_to_update: string, key: string, c:connec
             NOTICE([$note=Treck_TTL_observed,
                     $conn=c,
                     $identifier=key,
-                    $msg=fmt("Treck device TTL artefacts have been observed (method1). If %s is an unpatched Treck device, it could be impacted by the 'Ripple20' vulnerabilities involving the Treck TCP/IP stack https://www.jsof-tech.com/ripple20/ and https://treck.com/vulnerability-reply-information/ <debug info: get_current_packet_header() =>", c$id$resp_h)]);#, current_packet_header)]);
+                    $msg=fmt("Treck device TTL artifacts have been observed (method1). If %s is an unpatched Treck device, it could be impacted by the 'Ripple20' vulnerabilities involving the Treck TCP/IP stack https://www.jsof-tech.com/ripple20/ and https://treck.com/vulnerability-reply-information/ <debug info: get_current_packet_header() =>", c$id$resp_h)]);#, current_packet_header)]);
             delete seen_treck_255_ICMP_TTL_from[key];
             delete seen_treck_64_TCP_TTL_from[key];
             }
@@ -157,7 +157,7 @@ event connection_SYN_packet(c: connection, pkt: SYN_packet)
         NOTICE([$note=Treck_TCP_observed,
             $conn=c,
             $identifier=cat(c$id$resp_h),
-            $msg=fmt("Treck device TCP artefacts have been observed. If %s is an unpatched Treck device, it could be impacted by the 'Ripple20' vulnerabilities involving the Treck TCP/IP stack https://www.jsof-tech.com/ripple20/ and https://treck.com/vulnerability-reply-information/ <debug info: pkt=>", c$id$resp_h)]);
+            $msg=fmt("Treck device TCP artifacts have been observed. If %s is an unpatched Treck device, it could be impacted by the 'Ripple20' vulnerabilities involving the Treck TCP/IP stack https://www.jsof-tech.com/ripple20/ and https://treck.com/vulnerability-reply-information/ <debug info: pkt=>", c$id$resp_h)]);
         }
     local current_packet_header:raw_pkt_hdr = get_current_packet_header();
     # Failsafe for runtime
