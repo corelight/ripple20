@@ -1,4 +1,4 @@
-# "Ripple20" Treck IOT/ICS device discovery and exploit detection
+# "Ripple20" Treck IOT/ICS device discovery and exploit detection (v0.2)
 <p align="center">
   <img width="230" height="150" src="r20_logo.png">
 </p>
@@ -18,22 +18,21 @@ A Zeek package for the passive detection of Treck devices, discovery/scanning at
 
 | Notice | Fidelity  |
 | -------- | ---------------------- |
-|Treck device has been observed based on IP/TTL artifacts - method 1| medium/high | 
-|Treck device has been observed based on IP/TTL artifacts - method 2| medium/high |
-|Treck device has been observed based on TCP artifacts| medium |
-|Treck device has been observed based on ICMP artifacts|high |
-|The JSOF scanning tool (or derivative) has been observed - method 1| high |
-|The JSOF scanning tool (or derivative) has been observed - method 2| high |
-|Treck IP-in-IP encapsulation exploit outer packet detected| high|
-|Treck IP-in-IP encapsulation exploit inner packet detected| high|
-  
-High Fidelity means high confidence of a True Positive.
-By default all high and medium notices are raised, however if you like you can turn the medium notice off with `enable_medium_fidelity_notices = F` in `scripts/config.zeek`.
+|Treck device has been observed based on IP/TTL artifacts - method 1|medium| 
+|Treck device has been observed based on IP/TTL artifacts - method 2|medium|
+|Treck device has been observed based on TCP artifacts|medium|
+|Treck device has been observed based on ICMP artifacts|high|
+|The JSOF scanning tool (or derivative) has been observed - method 1|high|
+|The JSOF scanning tool (or derivative) has been observed - method 2|high|
+|The JSOF scanning tool (or derivative) has been observed - method 3|high|
+|Treck IP-in-IP encapsulation exploit outer packet detected|high|
+|Treck IP-in-IP encapsulation exploit inner packet detected|high|
+|Treck IP-in-IP encapsulation exploit outer and inner packet detected|high|
 
+High Fidelity means high confidence of a True Positive.  
+Medium Fidelity means that there could well be False Positives, however if a device has alerts for more a collection of different Medium Fidelity notices, then it is more likely to be a True positive. For this reason, by default all notices are enabled, however if the medium fidelity notices are too noisy you can disable them with `enable_medium_fidelity_notices = F` in `scripts/config.zeek`.
 
-Each notice includes a small amount of packet metadata which is useful for triage and refinement. 
-
-
+Where helpful, notices include a small amount of packet metadata which is useful for triage and refinement.  
 | msg in notice.log | debug added to msg |
 | -------- | ---------------------- |
 |Treck device ICMP artifacts have been observed. If 10.1.2.3 is an unpatched Treck device, it could be impacted by the 'Ripple20' vulnerabilities involving the Treck TCP/IP stack https://www.jsof-tech.com/ripple20/ |<debug info:icmp=[orig_h=10.1.2.3, resp_h=10.1.133.37, itype=166, icode=0, len=6, hlim=1, v6=F]>|
@@ -48,4 +47,4 @@ Treck device TCP artifacts have been observed. If unpatched, the device at 10.1.
 ## Usage:
 - To use against a pcap you already have ```zeek -Cr scripts/__load__.zeek your.pcap```  
 
-- If using in a live environment, the script ```ripple20_nonclusterized.zeek``` is written for a non clustered live Zeek environment. This script can still be loaded and will work as intended for some of the notices in a clustered environment, however to be fully effective a different version of this script that supports Zeek clusters is required. Contact the author for more detail (Ben Reardon, Research Team @Corelight. @benreardon or ben.reardon [at] corelight.com)
+- Version (v0.2) additional notices and fully supports clustered OR non clustered live environments. 
