@@ -30,7 +30,7 @@ A Zeek package for the passive detection of Treck devices, discovery/scanning at
 |Treck IP-in-IP encapsulation exploit outer and inner packet detected|high|
 
 High Fidelity means high confidence of a True Positive.  
-Medium Fidelity means that there could well be False Positives, however if a device has alerts for more a collection of different Medium Fidelity notices, then it is more likely to be a True positive. For this reason, by default all notices are enabled, however if the medium fidelity notices are too noisy you can disable them with `enable_medium_fidelity_notices = F` in `scripts/config.zeek`.
+Medium Fidelity means that there could well be False Positives, however if a device has more than one Medium Fidelity notice type, then it is more likely to be a True Positive. For this reason, by default all notices are enabled, however if the medium fidelity notices are too noisy you can disable them with `enable_medium_fidelity_notices = F` in `scripts/config.zeek`.
 
 Where helpful, notices include a small amount of packet metadata which is useful for triage and refinement.  
 | msg in notice.log | debug added to msg |
