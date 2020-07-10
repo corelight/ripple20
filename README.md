@@ -14,7 +14,7 @@ A Zeek package for the passive detection of Treck devices, discovery/scanning at
 - https://www.us-cert.gov/ics/advisories/icsa-20-168-01
 - https://www.kb.cert.org/vuls/id/257161
 
-## Notices raised:   
+## Notices raised :   
 
 | Notice | Fidelity  |
 | -------- | ---------------------- |
@@ -44,7 +44,9 @@ Treck device TCP artifacts have been observed. If unpatched, the device at 10.1.
 |JSOF Ripple20 scanner has been observed coming from 10.1.133.37 (window scale=123). https://www.jsof-tech.com/ripple20/ |<debug info: pkt=[is_orig=T, DF=F, ttl=64, size=44, win_size=8192, win_scale=123, MSS=0, SACK_OK=F]>|
 
 
-## Usage:
+## Usage and recommendations:
 - To use against a pcap you already have ```zeek -Cr scripts/__load__.zeek your.pcap```  
 
-- Version (v0.2) additional notices and fully supports clustered OR non clustered live environments. 
+- Version (v0.2) additional notices and fully supports clustered OR non clustered live environments.  
+
+- You may also wish to disable Medium Fidelity notices via `enable_medium_fidelity_notices = F` in `scripts/config.zeek` if there is a performance impact bought on by this package. In particular in high Packets per Second environments, for example Internet facing taps where there are a lot of connections including SYN scans, this package uses the connection_established event which will be frequent and expensive in this environment. Disabling the medium fidelity notices will make a large improvement on performance in this case. When installing this package, make sure to profile your system before and after so to ensure that performance isn't an issue for you
