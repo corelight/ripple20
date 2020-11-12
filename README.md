@@ -45,7 +45,7 @@ Treck device TCP artifacts have been observed. If unpatched, the device at 10.1.
 
 
 ## Usage and recommendations:
-- To use against a pcap you already have ```zeek -Cr scripts/__load__.zeek your.pcap```  
+- To use against a pcap you already have ```zeek -Cr your.pcap scripts/__load__.zeek```  
 
 - Version (v0.2) additional notices and fully supports clustered OR non clustered live environments.  
 
