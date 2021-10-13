@@ -134,7 +134,11 @@ event Ripple20::worker_to_manager(table_to_update: string, key: string, c:connec
         }
     }
 
+@if ( Version::number >= 40100 )
 event icmp_sent(c: connection, icmp: icmp_info)
+@else
+event icmp_sent(c: connection, icmp: icmp_conn)
+@endif
     {
     # Detect Treck by unique ICMP codes (icmp_ms_sync.py)
     # Note the robust two table approach is in case the pong (166) is seen prior to the ping (165)
@@ -229,7 +233,11 @@ event connection_SYN_packet(c: connection, pkt: SYN_packet)
     }
 
 # Detect TTL indicator ip_ttl_scan.py (Part 1 being the ICMP TTL 225 indicator)
+@if ( Version::number >= 40100 )
 event icmp_echo_reply(c: connection, icmp: icmp_info, id: count, seq: count, payload: string)
+@else
+event icmp_echo_reply(c: connection, icmp: icmp_conn, id: count, seq: count, payload: string)
+@endif
     {
     if (!enable_medium_fidelity_notices)
         return;
