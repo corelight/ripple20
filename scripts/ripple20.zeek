@@ -42,7 +42,7 @@ event Ripple20::worker_to_manager(table_to_update: string, key: string, c:connec
                 $conn=c,
                 $identifier=key,
                 $msg=fmt("JSOF Ripple20 scanner has been observed coming from %s (ICMP 165). https://www.jsof-tech.com/ripple20/ <debug info: icmp=%s>", c$id$orig_h, debug)]);
-        # Now update the 165 table to keep track of this so we can look for subsequent 166 replies 
+        # Now update the 165 table to keep track of this so we can look for subsequent 166 replies
         # Cluster::log,(fmt("DEBUG_ICMP_165 - seen_treck_165_ping_from is about to be updated with '%s'", key));
         ++seen_treck_165_ping_from[key];
         # Cluster::log,(fmt("DEBUG_ICMP_165 - seen_treck_165_ping_from is now '%s'", seen_treck_165_ping_from));
@@ -95,7 +95,7 @@ event Ripple20::worker_to_manager(table_to_update: string, key: string, c:connec
         ++seen_ip_in_ip_inner_packet_from[key];
         # Cluster::log,(fmt("DEBUG_IP_IN_IP_inner - seen_ip_in_ip_inner_packet_from is now '%s'", seen_ip_in_ip_inner_packet_from));
         }
-    # Now check if we've recently seen the same dest/orig pair in both inner and outer packets. 
+    # Now check if we've recently seen the same dest/orig pair in both inner and outer packets.
     if (key in seen_ip_in_ip_outer_packet_from && key in seen_ip_in_ip_inner_packet_from)
         {
         # Cluster::log,(fmt("DEBUG_IP_IN_IP_exploit - have seen exploit from '%s'", key));
@@ -120,7 +120,7 @@ event Ripple20::worker_to_manager(table_to_update: string, key: string, c:connec
     # seen_treck_64_TCP_TTL_from is just a faux table, is serves merely as a tag to say we have seen_treck_64_TCP_TTL_from an IP
     if (table_to_update == "seen_treck_64_TCP_TTL_from")
         {
-        # We are only interested to continue if we've already seen a 255 ICMP TTL 
+        # We are only interested to continue if we've already seen a 255 ICMP TTL
         # Cluster::log,(fmt("DEBUG_64_ICMP_TTL - saw %s with a 64 TTL. is this too NOISY ?", key));
         if (key !in seen_treck_255_ICMP_TTL_from)
             return;
@@ -134,7 +134,11 @@ event Ripple20::worker_to_manager(table_to_update: string, key: string, c:connec
         }
     }
 
+@if ( Version::number >= 40100 )
+event icmp_sent(c: connection, icmp: icmp_info)
+@else
 event icmp_sent(c: connection, icmp: icmp_conn)
+@endif
     {
     # Detect Treck by unique ICMP codes (icmp_ms_sync.py)
     # Note the robust two table approach is in case the pong (166) is seen prior to the ping (165)
@@ -144,7 +148,7 @@ event icmp_sent(c: connection, icmp: icmp_conn)
         @if (Cluster::is_enabled())
             Broker::publish(Cluster::manager_topic,  Ripple20::worker_to_manager,
                             "seen_treck_165_ping_from", cat(c$id$orig_h,",",c$id$resp_h), c, cat(icmp));
-        @else 
+        @else
             event Ripple20::worker_to_manager("seen_treck_165_ping_from", cat(c$id$orig_h,",",c$id$resp_h), c, cat(icmp));
         @endif
         return;
@@ -184,7 +188,7 @@ event connection_SYN_packet(c: connection, pkt: SYN_packet)
             $msg=fmt("Treck device TCP artifacts have been observed. If %s is an unpatched Treck device, it could be impacted by the 'Ripple20' vulnerabilities involving the Treck TCP/IP stack https://www.jsof-tech.com/ripple20/ and https://treck.com/vulnerability-reply-information/ <debug info: pkt=%s>", c$id$resp_h, pkt)]);
         }
     local current_packet_header:raw_pkt_hdr = get_current_packet_header();
-    
+
     # Failsafe for runtime
     if (!current_packet_header?$ip)
         return;
@@ -203,7 +207,7 @@ event connection_SYN_packet(c: connection, pkt: SYN_packet)
         #print"5 IP-in-IP";
         # Can't find an easy way to access the More Fragments (MF=1) flag, as this isn't carried in the pkt_hdr currently
         # Hopefully though this packet will also have the Do not fragment flag set to False, and this will improve the accuracy.
-        # This notice generated on a worker, as it's cheap and may occur too often to send to the cluster everytime , move this to the manager so to maintain clusterized model consistency 
+        # This notice generated on a worker, as it's cheap and may occur too often to send to the cluster everytime , move this to the manager so to maintain clusterized model consistency
         if (pkt$DF == F)
             {
             NOTICE([$note=Treck_IP_in_IP_outer_packet_observed,
@@ -229,7 +233,11 @@ event connection_SYN_packet(c: connection, pkt: SYN_packet)
     }
 
 # Detect TTL indicator ip_ttl_scan.py (Part 1 being the ICMP TTL 225 indicator)
+@if ( Version::number >= 40100 )
+event icmp_echo_reply(c: connection, icmp: icmp_info, id: count, seq: count, payload: string)
+@else
 event icmp_echo_reply(c: connection, icmp: icmp_conn, id: count, seq: count, payload: string)
+@endif
     {
     if (!enable_medium_fidelity_notices)
         return;
@@ -283,7 +291,7 @@ event connection_rejected(c: connection)
                 $identifier=cat(c$id$orig_h),
                 $msg=fmt("JSOF Ripple20 scanner has been observed coming from %s (RST from responder on ports 40509->40508) . https://www.jsof-tech.com/ripple20/", c$id$orig_h)]);
         }
-    
+
     if (!enable_medium_fidelity_notices)
         return;
     # Detect scanner TTL indicator (Part 2 (method2), TTL 64 RST) as in ip_ttl_scan.py
