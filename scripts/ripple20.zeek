@@ -135,31 +135,33 @@ event Ripple20::worker_to_manager(table_to_update: string, key: string, c:connec
     }
 
 @if ( Version::number >= 40100 )
-event icmp_sent(c: connection, icmp: icmp_info)
+event icmp_sent(c: connection, info: icmp_info)
+    {
 @else
 event icmp_sent(c: connection, icmp: icmp_conn)
-@endif
     {
+    local info = icmp;
+@endif
     # Detect Treck by unique ICMP codes (icmp_ms_sync.py)
     # Note the robust two table approach is in case the pong (166) is seen prior to the ping (165)
-    if (icmp$itype == 165)
+    if (info$itype == 165)
         {
-        # print(cat(icmp));
+        # print(cat(info));
         @if (Cluster::is_enabled())
             Broker::publish(Cluster::manager_topic,  Ripple20::worker_to_manager,
-                            "seen_treck_165_ping_from", cat(c$id$orig_h,",",c$id$resp_h), c, cat(icmp));
+                            "seen_treck_165_ping_from", cat(c$id$orig_h,",",c$id$resp_h), c, cat(info));
         @else
-            event Ripple20::worker_to_manager("seen_treck_165_ping_from", cat(c$id$orig_h,",",c$id$resp_h), c, cat(icmp));
+            event Ripple20::worker_to_manager("seen_treck_165_ping_from", cat(c$id$orig_h,",",c$id$resp_h), c, cat(info));
         @endif
         return;
         }
-    if (icmp$itype == 166)
+    if (info$itype == 166)
         {
         @if (Cluster::is_enabled())
             Broker::publish(Cluster::manager_topic,  Ripple20::worker_to_manager,
-                            "seen_treck_166_pong_from", cat(c$id$resp_h,",",c$id$orig_h), c, cat(icmp));
+                            "seen_treck_166_pong_from", cat(c$id$resp_h,",",c$id$orig_h), c, cat(info));
         @else
-            event Ripple20::worker_to_manager("seen_treck_166_pong_from", cat(c$id$resp_h,",",c$id$orig_h), c, cat(icmp));
+            event Ripple20::worker_to_manager("seen_treck_166_pong_from", cat(c$id$resp_h,",",c$id$orig_h), c, cat(info));
         @endif
         }
     }
@@ -234,11 +236,13 @@ event connection_SYN_packet(c: connection, pkt: SYN_packet)
 
 # Detect TTL indicator ip_ttl_scan.py (Part 1 being the ICMP TTL 225 indicator)
 @if ( Version::number >= 40100 )
-event icmp_echo_reply(c: connection, icmp: icmp_info, id: count, seq: count, payload: string)
+event icmp_echo_reply(c: connection, info: icmp_info, id: count, seq: count, payload: string)
+    {
 @else
 event icmp_echo_reply(c: connection, icmp: icmp_conn, id: count, seq: count, payload: string)
-@endif
     {
+    local info = icmp;
+@endif
     if (!enable_medium_fidelity_notices)
         return;
     # Due to bug in icmp_echo_reply https://github.com/zeek/zeek/issues/1019, am using get_current_packet_header() as workaround
@@ -251,9 +255,9 @@ event icmp_echo_reply(c: connection, icmp: icmp_conn, id: count, seq: count, pay
         {
         @if (Cluster::is_enabled())
             Broker::publish(Cluster::manager_topic,  Ripple20::worker_to_manager,
-                            "seen_treck_255_ICMP_TTL_from", cat(c$id$orig_h), c, cat("current_packet_header=",cat(current_packet_header),"icmp=",cat(icmp)));
+                            "seen_treck_255_ICMP_TTL_from", cat(c$id$orig_h), c, cat("current_packet_header=",cat(current_packet_header),"info=",cat(info)));
         @else
-            event Ripple20::worker_to_manager("seen_treck_255_ICMP_TTL_from", cat(c$id$orig_h), c, cat(cat(current_packet_header, icmp)));
+            event Ripple20::worker_to_manager("seen_treck_255_ICMP_TTL_from", cat(c$id$orig_h), c, cat(cat(current_packet_header, info)));
         @endif
         }
     }
