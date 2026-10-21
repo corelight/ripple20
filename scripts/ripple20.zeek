@@ -134,6 +134,23 @@ event Ripple20::worker_to_manager(table_to_update: string, key: string, c:connec
         }
     }
 
+# Send an observation to the manager, or handle it locally when not running in a cluster.
+#   Zeek 7.1 added Cluster::publish(), which works with any cluster backend (Broker, ZeroMQ,
+#   etc.); Broker::publish() only works when Broker is the cluster backend, and with any other
+#   backend it does nothing but log a reporter warning.
+function publish_to_manager(table_to_update: string, key: string, c: connection, debug: string)
+    {
+@if ( Cluster::is_enabled() )
+@if ( Version::number >= 70100 )
+    Cluster::publish(Cluster::manager_topic, Ripple20::worker_to_manager, table_to_update, key, c, debug);
+@else
+    Broker::publish(Cluster::manager_topic, Ripple20::worker_to_manager, table_to_update, key, c, debug);
+@endif
+@else
+    event Ripple20::worker_to_manager(table_to_update, key, c, debug);
+@endif
+    }
+
 @if ( Version::number >= 40100 )
 event icmp_sent(c: connection, icmp: icmp_info)
 @else
@@ -145,22 +162,12 @@ event icmp_sent(c: connection, icmp: icmp_conn)
     if (icmp$itype == 165)
         {
         # print(cat(icmp));
-        @if (Cluster::is_enabled())
-            Broker::publish(Cluster::manager_topic,  Ripple20::worker_to_manager,
-                            "seen_treck_165_ping_from", cat(c$id$orig_h,",",c$id$resp_h), c, cat(icmp));
-        @else
-            event Ripple20::worker_to_manager("seen_treck_165_ping_from", cat(c$id$orig_h,",",c$id$resp_h), c, cat(icmp));
-        @endif
+        publish_to_manager("seen_treck_165_ping_from", cat(c$id$orig_h,",",c$id$resp_h), c, cat(icmp));
         return;
         }
     if (icmp$itype == 166)
         {
-        @if (Cluster::is_enabled())
-            Broker::publish(Cluster::manager_topic,  Ripple20::worker_to_manager,
-                            "seen_treck_166_pong_from", cat(c$id$resp_h,",",c$id$orig_h), c, cat(icmp));
-        @else
-            event Ripple20::worker_to_manager("seen_treck_166_pong_from", cat(c$id$resp_h,",",c$id$orig_h), c, cat(icmp));
-        @endif
+        publish_to_manager("seen_treck_166_pong_from", cat(c$id$resp_h,",",c$id$orig_h), c, cat(icmp));
         }
     }
 
@@ -198,12 +205,7 @@ event connection_SYN_packet(c: connection, pkt: SYN_packet)
     # "Outer IP packet (fragment 1): IPv4{frag offset=0, MF=1, proto=4, id=0xabcd}"
     if (current_packet_header$ip$p == 4)
         {
-        @if (Cluster::is_enabled())
-            Broker::publish(Cluster::manager_topic,  Ripple20::worker_to_manager,
-                            "seen_ip_in_ip_outer_packet_from", cat(c$id$resp_h), c, cat(current_packet_header));
-        @else
-            event Ripple20::worker_to_manager("seen_ip_in_ip_outer_packet_from", cat(c$id$resp_h), c, cat(current_packet_header));
-        @endif
+        publish_to_manager("seen_ip_in_ip_outer_packet_from", cat(c$id$resp_h), c, cat(current_packet_header));
         #print"5 IP-in-IP";
         # Can't find an easy way to access the More Fragments (MF=1) flag, as this isn't carried in the pkt_hdr currently
         # Hopefully though this packet will also have the Do not fragment flag set to False, and this will improve the accuracy.
@@ -223,12 +225,7 @@ event connection_SYN_packet(c: connection, pkt: SYN_packet)
     # Inner IP packet: IPv4{ihl=0xf, len=100, proto=0} with payload ’\x00’*40+’\x41’*100, but this will be less robust.
     if (current_packet_header$ip$p == 0)
         {
-        @if (Cluster::is_enabled())
-            Broker::publish(Cluster::manager_topic,  Ripple20::worker_to_manager,
-                            "seen_ip_in_ip_inner_packet_from", cat(c$id$resp_h), c, cat(current_packet_header));
-        @else
-            event Ripple20::worker_to_manager("seen_ip_in_ip_inner_packet_from", cat(c$id$resp_h), c, cat(current_packet_header));
-        @endif
+        publish_to_manager("seen_ip_in_ip_inner_packet_from", cat(c$id$resp_h), c, cat(current_packet_header));
         }
     }
 
@@ -249,12 +246,7 @@ event icmp_echo_reply(c: connection, icmp: icmp_conn, id: count, seq: count, pay
 
     if (current_packet_header$ip$ttl == 255)
         {
-        @if (Cluster::is_enabled())
-            Broker::publish(Cluster::manager_topic,  Ripple20::worker_to_manager,
-                            "seen_treck_255_ICMP_TTL_from", cat(c$id$orig_h), c, cat("current_packet_header=",cat(current_packet_header),"icmp=",cat(icmp)));
-        @else
-            event Ripple20::worker_to_manager("seen_treck_255_ICMP_TTL_from", cat(c$id$orig_h), c, cat(cat(current_packet_header, icmp)));
-        @endif
+        publish_to_manager("seen_treck_255_ICMP_TTL_from", cat(c$id$orig_h), c, cat("current_packet_header=",cat(current_packet_header),"icmp=",cat(icmp)));
         }
     }
 
@@ -271,12 +263,7 @@ event connection_established(c: connection)
     if (current_packet_header$ip$ttl == 64)
             {
             # print(cat(c$id$resp_h));
-            @if (Cluster::is_enabled())
-                Broker::publish(Cluster::manager_topic,  Ripple20::worker_to_manager,
-                                "seen_treck_64_TCP_TTL_from", cat(c$id$resp_h), c, cat(current_packet_header));
-            @else
-                event Ripple20::worker_to_manager("seen_treck_64_TCP_TTL_from", cat(c$id$resp_h), c, cat(current_packet_header));
-            @endif
+            publish_to_manager("seen_treck_64_TCP_TTL_from", cat(c$id$resp_h), c, cat(current_packet_header));
             }
     }
 
@@ -301,11 +288,6 @@ event connection_rejected(c: connection)
         return;
     if (current_packet_header$ip$ttl == 64)
         {
-        @if (Cluster::is_enabled())
-            Broker::publish(Cluster::manager_topic,  Ripple20::worker_to_manager,
-                            "seen_treck_64_TCP_TTL_from", cat(c$id$resp_h), c, cat(current_packet_header));
-        @else
-            event Ripple20::worker_to_manager("seen_treck_64_TCP_TTL_from", cat(c$id$resp_h), c, cat(current_packet_header));
-        @endif
+        publish_to_manager("seen_treck_64_TCP_TTL_from", cat(c$id$resp_h), c, cat(current_packet_header));
         }
     }
